@@ -1,25 +1,43 @@
 {% extends 'base.html.twig' %}
-{% block title %}Série #{{ program.id }}
+{% block title %}
+  {{ program.title }}
 {% endblock %}
 
 {% block body %}
+  <div class="media">
+    <img class="align-self-start mr-3"
+      src="{{ program.poster }}"
+      alt="{{ program.title }} poster" />
+    <div class="media-body">
+      <h1 class="mt-0">
+        {{ program.title }}
+      </h1>
+      <ul>
+        {{ program.summary }}
+      </ul>
+      <li>
+        Catégorie :
+        {{ program.category.name }}
+      </li>
+      <li>
+        Origine :
+        {{ program.country }}
+      </li>
+      <li>
+        Date de sortie :
+        {{ program.year }}
+      </li>
+      <li>
+        Saisons :<ul>
+          {% for season in season %}
+              <li><a href="{{ path('program_season_show', { programId: program.id, seasonId: season.id }) }}">Saison {{ season.id }}</a></li>
+          {% else %}
+            Aucune saison trouvée.
+          {% endfor %}
+        </ul>
+      </li>
+    </div>
+  </div>
 
-	<div class="media">
-		<img class="align-self-start mr-3" src="{{program.poster}}" alt="{{ program.title }} poster">
-		<div class="media-body">
-			<h1 class="mt-0">{{ program.title }}</h1>
-			<ul>{{ program.summary }}</ul>
-			<li>Catégorie :
-				{{ program.category.name }}</li>
-			<li>Origine :
-				{{ program.country }}</li>
-			<li>Date de sortie :
-				{{ program.year }}</li>
-		</div>
-	</div>
-
-	<a href="{{ path('program_index') }}">
-		Retour à la liste des programmes
-	</a>
-
+  <a href="{{ path('program_index') }}">Retour à la liste des programmes</a>
 {% endblock %}

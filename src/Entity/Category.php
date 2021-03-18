@@ -74,6 +74,7 @@ class Category
 
         return $this;
     }
+    
     /**
      * @param Program $program
      * @return Category
