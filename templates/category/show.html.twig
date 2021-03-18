@@ -1,20 +1,50 @@
 {% extends 'base.html.twig' %}
-{% block title %}Catégorie {{ category.name }}{% endblock %}
+{% block title %}
+  Catégorie
+  {{ categoryName }}
+{% endblock %}
 
 {% block body %}
+  <h1>
+    Les series de la catégorie {{ categoryName }}
+  </h1>
 
-<div class="media">
-  {#<img class="align-self-start mr-3" src="{{program.poster}}" alt="{{ program.title }} poster">
-  <div class="media-body">
-    <h1 class="mt-0">{{ program.title }}</h1>
-    <p>{{ program.summary }}</p>#}
-    <h1>Catégorie : {{ category.name }}</h1>
-    
-  </div>
-</div>
-
-<a href="{{ path('category_index') }}">
-    Retour à la liste des catégories
-</a>
-
+  {% for program in program %}
+    <div>
+      <h2>
+        {{ loop.index }}
+        /
+        <a href="{{
+          path(
+            'program_show',
+            {
+              id: program.id
+            }
+          )
+          }}">
+          {{ program.title }}
+        </a>
+        
+      </h2>
+      <ul>
+        <li>Sommaire : {{ program.summary }}</li>
+        <li>Origine : {{ program.country }}</li>
+        <li>Date de sortie : {{ program.year }}</li>
+      </ul>
+      {# Lien vers la fiche de la série : #}
+      <a href="{{
+        path(
+          'program_show',
+          {
+            id: program.id
+          }
+        )
+        }}">
+        <button type="button" class="btn btn-primary">Voir la fiche</button>
+      </a>
+      <br />
+    </div>
+  {% else %}
+    Aucune séries trouvée.
+  {% endfor %}
 {% endblock %}

@@ -15,7 +15,11 @@
 				</a>
 				- Catégorie :
 				<a href="{{ path('category_show', { categoryName: program.category.name }) }}"> {{ program.category.name }} </a></h2>
-			<p>{{ program.summary }}</p>
+			<ul>
+				<li>Sommaire : {{ program.summary }}</li>
+				<li>Origine  : {{ program.country }}</li>
+				<li>Date de sortie : {{ program.year }}</li>
+			</ul>
 			{# Lien vers la fiche de la série : #}
 			<a href="{{ path("program_show", { id: program.id }) }}">
 				<button type="button" class="btn btn-primary">Voir la fiche</button>

@@ -2,6 +2,7 @@
 // src/Controller/CategoryController.php
 namespace App\Controller;
 
+use App\Entity\Program;
 use App\Entity\Category;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,15 +29,6 @@ class CategoryController extends AbstractController
             'category/index.html.twig',
             ['categories' => $categories]
         );
-
-        $programs = $this->getDoctrine()
-            ->getRepository(Program::class)
-            ->findAll();
-
-        return $this->render(
-            'category/index.html.twig',
-            ['programs' => $programs]
-        );
     }
 
     /**
@@ -49,7 +41,17 @@ class CategoryController extends AbstractController
     {
         $category = $this->getDoctrine()
             ->getRepository(Category::class)
-            ->findOneBy(['name' => $categoryName]);
+            ->findOneBy(
+                ['name' => $categoryName]
+            );
+
+        $program = $this->getDoctrine()
+            ->getRepository(Program::class)
+            ->findBy(
+                ['category' => $category],
+                ['id' => 'DESC'],
+                3
+            );
 
         if (!$category) {
             throw $this->createNotFoundException(
@@ -57,7 +59,8 @@ class CategoryController extends AbstractController
             );
         }
         return $this->render('category/show.html.twig', [
-            'category' => $category,
+            'categoryName' => $categoryName,
+            'program' => $program
         ]);
     }
 }
