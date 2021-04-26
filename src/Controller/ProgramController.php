@@ -54,7 +54,7 @@ class ProgramController extends AbstractController
     /**
      * Getting a program's season by id's
      *
-     * @Route("/{programId}/season/{seasonId}", name="season_show")
+     * @Route("/{programId}/seasons/{seasonId}", name="season_show")
      * @ParamConverter("program", class="App\Entity\Program", options={"mapping": {"programId": "id"}})
      * @ParamConverter("season", class="App\Entity\Season", options={"mapping": {"seasonId": "id"}})
      *
@@ -64,11 +64,7 @@ class ProgramController extends AbstractController
     {
         $episodes = $season->getEpisodes();
 
-        if (!$program) {
-            throw $this->createNotFoundException(
-                'No program with id : ' . $program . ' found in program\'s table.'
-            );
-        } elseif (!$season) {
+        if (!$season) {
             throw $this->createNotFoundException(
                 'No season with id : ' . $season . ' found in season\'s table.'
             );
@@ -77,6 +73,32 @@ class ProgramController extends AbstractController
             'program' => $program,
             'season' => $season,
             'episodes' => $episodes,
+            
+
+        ]);
+    }
+
+    /**
+     * Getting an episode from a season's program
+     * 
+     * @Route("/{programId}/seasons/{seasonId}/episodes/{episodeId}", name="episode_show")
+     * @ParamConverter("program", class="App\Entity\Program", options={"mapping": {"programId": "id"}})
+     * @ParamConverter("season", class="App\Entity\Season", options={"mapping": {"seasonId": "id"}})
+     * @ParamConverter("episode", class="App\Entity\Episode", options={"mapping": {"episodeId": "id"}})
+     *
+     * @return Response
+     */
+    public function showEpisode(Program $program, Season $season, Episode $episode)
+    {
+        if (!$episode) {
+            throw $this->createNotFoundException(
+                'No episode with id : ' . $episode . ' found in program\'s table.'
+            );
+        }
+        return $this->render('program/episode_show.html.twig', [
+            'program' => $program,
+            'season' => $season,
+            'episode' => $episode,
 
         ]);
     }
