@@ -7,6 +7,7 @@ use App\Repository\ProgramRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
+
 /**
  * @ORM\Entity(repositoryClass=ProgramRepository::class)
  */
@@ -49,6 +50,11 @@ class Program
      * @ORM\Column(type="integer")
      */
     private $year;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Season", mappedBy="program")
+     */
+    private $seasons;
 
     public function getId(): ?int
     {
@@ -153,7 +159,7 @@ class Program
 
         return $this;
     }
-    
+
     /**
      * @param Season $season
      * @return Program
@@ -172,4 +178,3 @@ class Program
         return $this;
     }
 }
-
