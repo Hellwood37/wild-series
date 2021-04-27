@@ -6,6 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProgramRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 
 /**
@@ -22,11 +25,14 @@ class Program
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Ne me laisse pas tout vide")
+     * @Assert\Length(max="255", maxMessage="Le titre du saisi {{ value }} est trop long, il ne devrait pas dépasser {{ limit }} caractères")
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank(message="Ne me laisse pas tout vide")
      */
     private $summary;
 
@@ -53,6 +59,7 @@ class Program
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Season", mappedBy="program")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $seasons;
 
@@ -176,5 +183,22 @@ class Program
         }
 
         return $this;
+    }
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addConstraint(new UniqueEntity([
+            'fields' => 'title',
+            'errorPath' => 'title',
+            'message' => '{{ value }} existe déja !',
+        ]));
+
+        $metadata->addPropertyConstraint('summary', new Assert\Regex([
+            'pattern' => '/
+            plus belle la vie
+            /',
+            'match' => false,
+            'message' => 'On parle de vraies séries ici',
+        ]));
     }
 }
