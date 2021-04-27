@@ -1,0 +1,11 @@
+{# templates/program/new.html.twig #}
+
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <h1>Ajout d'une nouvelle série</h1>
+        {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <input type='submit' value='Add program'>
+    {{ form_end(form) }}
+{% endblock %}
