@@ -2,6 +2,7 @@
 // src/Controller/ProgramController.php
 namespace App\Controller;
 
+use App\Entity\Actor;
 use App\Entity\Episode;
 use App\Entity\Program;
 use App\Entity\Season;
@@ -51,7 +52,7 @@ class ProgramController extends AbstractController
         // Get data from HTTP request
         $form->handleRequest($request);
         // Was the form submitted ?
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             // Deal with the submitted data
             // Get the Entity Manager
             $entityManager = $this->getDoctrine()->getManager();
@@ -93,9 +94,10 @@ class ProgramController extends AbstractController
      *
      * @return Response
      */
-    public function showSeason(Program $program, Season $season)
+    public function showSeason(Program $program, Season $season, Actor $actors)
     {
         $episodes = $season->getEpisodes();
+        $actors = $program->getActors();
 
         if (!$season) {
             throw $this->createNotFoundException(
@@ -106,6 +108,7 @@ class ProgramController extends AbstractController
             'program' => $program,
             'season' => $season,
             'episodes' => $episodes,
+            'actors' => $actors,
             
 
         ]);

@@ -7,12 +7,15 @@ use App\Repository\ProgramRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 
 /**
  * @ORM\Entity(repositoryClass=ProgramRepository::class)
+ * @UniqueEntity(
+ *     fields="title",
+ *     message="{{ value }} existe déjà"
+ * )
  */
 class Program
 {
@@ -33,6 +36,11 @@ class Program
     /**
      * @ORM\Column(type="text")
      * @Assert\NotBlank(message="Ne me laisse pas tout vide")
+     * @Assert\Regex(
+     *     pattern="/plus belle la vie/",
+     *     match=false,
+     *     message="On parle de vraies séries ici"
+     * )
      */
     private $summary;
 
@@ -62,6 +70,11 @@ class Program
      * @ORM\JoinColumn(nullable=true)
      */
     private $seasons;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Actor::class, mappedBy="programs")
+     */
+    private $actors;
 
     public function getId(): ?int
     {
@@ -143,6 +156,7 @@ class Program
     public function __construct()
     {
         $this->seasons = new ArrayCollection();
+        $this->actors = new ArrayCollection();
     }
 
     /**
@@ -185,20 +199,31 @@ class Program
         return $this;
     }
 
-    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    /**
+     * @return Collection|Actor[]
+     */
+    public function getActors(): Collection
     {
-        $metadata->addConstraint(new UniqueEntity([
-            'fields' => 'title',
-            'errorPath' => 'title',
-            'message' => '{{ value }} existe déja !',
-        ]));
-
-        $metadata->addPropertyConstraint('summary', new Assert\Regex([
-            'pattern' => '/
-            plus belle la vie
-            /',
-            'match' => false,
-            'message' => 'On parle de vraies séries ici',
-        ]));
+        return $this->actors;
     }
+
+    public function addActor(Actor $actor): self
+    {
+        if (!$this->actors->contains($actor)) {
+            $this->actors[] = $actor;
+            $actor->addProgram($this);
+        }
+
+        return $this;
+    }
+
+    public function removeActor(Actor $actor): self
+    {
+        if ($this->actors->removeElement($actor)) {
+            $actor->removeProgram($this);
+        }
+
+        return $this;
+    }
+
 }
