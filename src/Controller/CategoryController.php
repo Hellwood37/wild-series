@@ -4,12 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Program;
 use App\Entity\Category;
+use App\Form\CategoryType;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Form\CategoryType;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Constraints as Assert;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * @Route("/categories", name="category_")
@@ -94,9 +94,43 @@ class CategoryController extends AbstractController
         }
         return $this->render('category/show.html.twig', [
             'categoryName' => $categoryName,
-            'program' => $program
+            'program' => $program,
+            'category' => $category,
         ]);
     }
 
-    
+ /**
+     * @Route("/{categoryName}/edit", name="edit", methods={"GET","POST"})
+     * @ParamConverter("category", class="App\Entity\Category", options={"mapping": {"categoryName": "name"}})
+     */
+    public function edit(Request $request, Category $category): Response
+    {
+        $form = $this->createForm(CategoryType::class, $category);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('category_index');
+        }
+
+        return $this->render('category/edit.html.twig', [
+            'category' => $category,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{categoryName}", name="delete", methods={"DELETE"})
+     */
+    public function delete(Request $request, Category $categoryName): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$categoryName->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($categoryName);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('category_index');
+    }
 }

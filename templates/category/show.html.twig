@@ -24,7 +24,6 @@
           }}">
           {{ program.title }}
         </a>
-        
       </h2>
       <ul>
         <li>Sommaire : {{ program.summary }}</li>
@@ -47,4 +46,10 @@
   {% else %}
     Aucune séries trouvée.
   {% endfor %}
+
+  <a href="{{ path('category_index') }}">back to list</a>
+
+  <a href="{{ path('category_edit', {'categoryName': category.name}) }}">edit</a>
+
+  {{ include('category/_delete_form.html.twig') }}
 {% endblock %}
