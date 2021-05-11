@@ -94,11 +94,10 @@ class ProgramController extends AbstractController
      * @Route("/{program}/seasons/{season}", name="season_show")
      * @ParamConverter("program", class="App\Entity\Program", options={"mapping": {"program": "slug"}})
      * @ParamConverter("season", class="App\Entity\Season", options={"mapping": {"season": "number"}})
-     * @ParamConverter("actor", class="App\Entity\Actor", options={"mapping": {"actor": "id"}})
      *
      * @return Response
      */
-    public function showSeason(Program $program, Season $season, Actor $actors): Response
+    public function showSeason(Program $program, Season $season): Response
     {
         $episodes = $season->getEpisodes();
         $actors = $program->getActors();
