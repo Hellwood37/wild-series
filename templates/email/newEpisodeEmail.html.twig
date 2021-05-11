@@ -7,5 +7,5 @@
 <p>Hello, the new episode {{ episode.title }} of the program {{ program.title }} has been created on Wild Series</p>
 <p>Synopsys : {{ episode.synopsis }}</p>
 
-<a class="btn btn-primary" href="">Voir l'épisode</a>
+<a class="btn btn-primary" href="{{ path('episode_show', {'episode': episode.slug}) }}">Voir l'épisode</a>
 {% endblock body %}
