@@ -1,0 +1,12 @@
+{% extends 'email/base.email.html.twig' %}
+
+{% block title %}Send Email{% endblock %}
+
+{% block body %}
+    <h1>La nouvelle série {{ program.title }} a été ajouté sur Wild Série !</h1>
+
+    <p>Retrouvez la facilement en cliquant ici :
+        <a href="https://localhost:8000/program/{{ program.slug }}">{{ program.title }}</a>
+    </p>
+    <p>N'hésitez pas à venir nous rejoindre et découvrir toujours plus de contenu.</p>
+{% endblock %}

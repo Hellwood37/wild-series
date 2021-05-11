@@ -2,11 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Season;
 use App\Entity\Episode;
+use App\Entity\Program;
 use App\Service\Slugify;
 use App\Form\EpisodeType;
+use Symfony\Component\Mime\Email;
 use App\Repository\EpisodeRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,13 +28,14 @@ class EpisodeController extends AbstractController
     {
         return $this->render('episode/index.html.twig', [
             'episodes' => $episodeRepository->findAll(),
+            
         ]);
     }
 
     /**
      * @Route("/new", name="episode_new", methods={"GET","POST"})
      */
-    public function new(Request $request, Slugify $slugify): Response
+    public function new(Request $request, Slugify $slugify, MailerInterface $mailer): Response
     {
         $episode = new Episode();
         $form = $this->createForm(EpisodeType::class, $episode);
@@ -43,7 +48,19 @@ class EpisodeController extends AbstractController
             $episode->setSlug($slug);
             $entityManager->persist($episode);
             $entityManager->flush();
+            // Send an Email after have had persist object
+            $season = $this->getDoctrine()->getRepository(Season::class)->find($episode->getSeason());
+            $program = $this->getDoctrine()->getRepository(Program::class)->find($season->getProgram());
 
+            $email = new Email();
+            $email->from($this->getParameter("mailer_from"))
+                ->to($this->getParameter("mailer_from"))
+                ->subject('Un nouvelle épisode vient d\'être publié !')
+                ->html($this->renderView("email/newEpisodeEmail.html.twig", [
+                    "episode" => $episode,
+                    "program" => $program
+                ]));
+            $mailer->send($email);
             return $this->redirectToRoute('episode_index');
         }
 
