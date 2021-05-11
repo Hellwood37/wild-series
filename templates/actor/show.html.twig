@@ -15,7 +15,7 @@
                 <th>Filmographie</th>
                 <td>
                     {% for program in actor.programs %}
-                        <p><a href="{{path('program_show', {id: program.id})}}">{{ program.title}}</a></p>
+                        <p><a href="{{path('program_show', {program: program.slug})}}">{{ program.title}}</a></p>
                     {% endfor %}
                 </td>
             </tr>

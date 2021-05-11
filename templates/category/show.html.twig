@@ -17,9 +17,7 @@
         <a href="{{
           path(
             'program_show',
-            {
-              id: program.id
-            }
+           {program: program.slug}
           )
           }}">
           {{ program.title }}
@@ -34,9 +32,7 @@
       <a href="{{
         path(
           'program_show',
-          {
-            id: program.id
-          }
+          {program: program.slug}
         )
         }}">
         <button type="button" class="btn btn-primary">Voir la fiche</button>
