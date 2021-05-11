@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Episode;
+use App\Service\Slugify;
 use App\Form\EpisodeType;
 use App\Repository\EpisodeRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * @Route("/episode")
@@ -28,7 +30,7 @@ class EpisodeController extends AbstractController
     /**
      * @Route("/new", name="episode_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, Slugify $slugify): Response
     {
         $episode = new Episode();
         $form = $this->createForm(EpisodeType::class, $episode);
@@ -36,6 +38,9 @@ class EpisodeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+            // Call of the service Slugify
+            $slug = $slugify->generate($episode->getTitle());
+            $episode->setSlug($slug);
             $entityManager->persist($episode);
             $entityManager->flush();
 
@@ -49,7 +54,8 @@ class EpisodeController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="episode_show", methods={"GET"})
+     * @Route("/{episode}", name="episode_show", methods={"GET"})
+     * @ParamConverter("episode", class="App\Entity\Episode", options={"mapping": {"episode": "slug"}})
      */
     public function show(Episode $episode): Response
     {
@@ -59,7 +65,8 @@ class EpisodeController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="episode_edit", methods={"GET","POST"})
+     * @Route("/{episode}/edit", name="episode_edit", methods={"GET","POST"})
+     * @ParamConverter("episode", class="App\Entity\Episode", options={"mapping": {"episode": "slug"}})
      */
     public function edit(Request $request, Episode $episode): Response
     {
@@ -79,11 +86,12 @@ class EpisodeController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="episode_delete", methods={"DELETE"})
+     * @Route("/{episode}", name="episode_delete", methods={"DELETE"})
+     * @ParamConverter("episode", class="App\Entity\Episode", options={"mapping": {"episode": "slug"}})
      */
     public function delete(Request $request, Episode $episode): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$episode->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $episode->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($episode);
             $entityManager->flush();

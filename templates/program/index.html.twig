@@ -10,7 +10,7 @@
 		<div>
 			<h2>{{ loop.index }}
 				/
-				<a href="{{ path("program_show", { id: program.id }) }}">
+				<a href="{{ path("program_show", { program: program.slug }) }}">
 					{{ program.title }}
 				</a>
 				- Catégorie :
@@ -21,7 +21,7 @@
 				<li>Date de sortie : {{ program.year }}</li>
 			</ul>
 			{# Lien vers la fiche de la série : #}
-			<a href="{{ path("program_show", { id: program.id }) }}">
+			<a href="{{ path("program_show", { program: program.slug }) }}">
 				<button type="button" class="btn btn-primary">Voir la fiche</button>
 			</a>
 			<br>
