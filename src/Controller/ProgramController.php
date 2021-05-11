@@ -2,15 +2,16 @@
 // src/Controller/ProgramController.php
 namespace App\Controller;
 
-use App\Entity\Actor;
 use App\Entity\Season;
 use App\Entity\Episode;
 use App\Entity\Program;
 use App\Service\Slugify;
 use App\Form\ProgramType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Mime\Email;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -44,7 +45,7 @@ class ProgramController extends AbstractController
      *
      * @Route("/new", name="new")
      */
-    public function new(Request $request, Slugify $slugify): Response
+    public function new(Request $request, Slugify $slugify, MailerInterface $mailer): Response
     {
         // Create a new Program Object
         $program = new Program();
@@ -64,6 +65,14 @@ class ProgramController extends AbstractController
             $entityManager->persist($program);
             // Flush the persisted object
             $entityManager->flush();
+            // Send an Email after have had persist object
+            $email = (new Email())
+                ->from($this->getParameter('mailer_from'))
+                ->to($this->getParameter('mailer_from'))
+                ->subject('Une nouvelle série vient d\'être publiée !')
+                ->html($this->renderView('email/newProgramEmail.html.twig', ['program' => $program, 'slug' => $slug]));
+
+            $mailer->send($email);
             // Finally redirect to categories list
             return $this->redirectToRoute('program_index');
         }
@@ -72,10 +81,10 @@ class ProgramController extends AbstractController
     }
 
     /**
-    * @Route("/{program}", name="show", methods={"GET"})
-    * @ParamConverter("program", class="App\Entity\Program", options={"mapping": {"program": "slug"}})
-    * @return Response
-    */
+     * @Route("/{program}", name="show", methods={"GET"})
+     * @ParamConverter("program", class="App\Entity\Program", options={"mapping": {"program": "slug"}})
+     * @return Response
+     */
     public function show(Program $program): Response
     {
         $seasons = $program->getSeasons();
@@ -93,7 +102,7 @@ class ProgramController extends AbstractController
      *
      * @Route("/{program}/seasons/{season}", name="season_show")
      * @ParamConverter("program", class="App\Entity\Program", options={"mapping": {"program": "slug"}})
-     * @ParamConverter("season", class="App\Entity\Season", options={"mapping": {"season": "number"}})
+     * @ParamConverter("season", class="App\Entity\Season", options={"mapping": {"season": "id"}})
      *
      * @return Response
      */
