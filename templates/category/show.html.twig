@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+  Catégorie
+  {{ categoryName }}
+{% endblock %}
+
+{% block body %}
+  <h1>
+    Les series de la catégorie {{ categoryName }}
+  </h1>
+
+  {% for program in program %}
+    <div>
+      <h2>
+        {{ loop.index }}
+        /
+        <a href="{{
+          path(
+            'program_show',
+           {program: program.slug}
+          )
+          }}">
+          {{ program.title }}
+        </a>
+      </h2>
+      <ul>
+        <li>Sommaire : {{ program.summary }}</li>
+        <li>Origine : {{ program.country }}</li>
+        <li>Date de sortie : {{ program.year }}</li>
+      </ul>
+      {# Lien vers la fiche de la série : #}
+      <a href="{{
+        path(
+          'program_show',
+          {program: program.slug}
+        )
+        }}">
+        <button type="button" class="btn btn-primary">Voir la fiche</button>
+      </a>
+      <br />
+    </div>
+  {% else %}
+    Aucune séries trouvée.
+  {% endfor %}
+
+  <a href="{{ path('category_index') }}">back to list</a>
+
+  <a href="{{ path('category_edit', {'categoryName': category.name}) }}">edit</a>
+
+  {{ include('category/_delete_form.html.twig') }}
+{% endblock %}

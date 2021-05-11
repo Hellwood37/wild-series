@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Saison {{ season.number }} de la série: {{ program.title }}
+{% endblock %}
+
+{% block body %}
+  <h1>
+   Id: {{ season.id }}, Saison {{ season.number }} de la série: {{ program.title }}
+  </h1>
+  <p>
+    {{ season.description }}
+  </p>
+
+  {% for episode in episodes %}
+    <ul>
+      <a href="{{ path('program_episode_show', { program: program.slug, season: season.number, episode: episode.slug }) }}"><li>Episode {{ episode.number }}: {{ episode.title }}</li></a>
+    </ul>
+  {% endfor %}
+  <a href="{{ path('episode_new')}}">Ajouter un nouvel épisode</a>
+  {{ include('season/_delete_form.html.twig') }}
+{% endblock %}

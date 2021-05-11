@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+  {{ program.title }}
+{% endblock %}
+
+{% block body %}
+  <div class="media">
+    <img class="align-self-start mr-3"
+      src="{{ program.poster }}"
+      alt="{{ program.title }} poster" />
+    <div class="media-body">
+      <h1 class="mt-0">
+        {{ program.title }}
+      </h1>
+      <ul>
+        {{ program.summary }}
+      </ul>
+      <li>
+        Catégorie :
+        {{ program.category.name }}
+      </li>
+      <li>
+        Origine :
+        {{ program.country }}
+      </li>
+      <li>
+        Date de sortie :
+        {{ program.year }}
+      </li>
+      <li>
+        Saisons :<ul>
+          {% for season in seasons %}
+            <li>
+              <a href="{{
+                path(
+                  'program_season_show',
+                  {
+                    program: program.slug,
+                    season: season.id
+                  }
+                )
+                }}">
+                Saison {{ season.number }}
+              </a>
+            </li>
+          {% else %}
+            Aucune saison trouvée.
+          {% endfor %}
+        </ul>
+      </li>
+      <li>
+        <strong>Acteurs :</strong>
+        <ul>
+          {% for actor in program.actors %}
+            <li><a href="{{ path('actor_show', {id: actor.id})}}">{{ actor.name }}</a></li>
+          {% else %}
+            <li>Aucun acteur pour cette série</li>
+          {% endfor %}
+        </ul>
+      </li>
+    </div>
+  </div>
+    <a href="{{ path('program_index') }}">back to list</a>
+
+    <a href="{{ path('program_edit', {'program': program.slug}) }}">edit</a>
+
+    {{ include('program/_delete_form.html.twig') }}
+{% endblock %}
