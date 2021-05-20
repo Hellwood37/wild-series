@@ -66,6 +66,7 @@ class EpisodeController extends AbstractController
 
         return $this->render('episode/new.html.twig', [
             'episode' => $episode,
+            
             'form' => $form->createView(),
         ]);
     }

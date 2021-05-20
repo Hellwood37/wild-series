@@ -15,9 +15,22 @@
       <h2>
         Bienvenue sur votre site préfré
       </h2>
-      <p>
+      <p class="text-white">
         Vous allez pouvoir découvrir notre watchlist pour le confinement
       </p>
+      <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+      <div class="d-flex justify-content-around p-5">
+        <a type="button"
+          class="btn btn-secondary btn-lg justify-content-around"
+          href="{{ path('program_index') }}">
+          SERIES
+        </a>
+        <a type="button"
+          class="btn btn-secondary btn-lg justify-content-around"
+          href="{{ path('category_index') }}">
+          CATEGORIES
+        </a>
+      </div>
     </div>
   </div>
 {% endblock %}
