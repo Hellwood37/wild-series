@@ -96,8 +96,8 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
             return new RedirectResponse($targetPath);
         }
 
-        // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        throw new \Exception('home/home.html.twig'.__FILE__);
+        return new RedirectResponse($this->urlGenerator->generate('app_index'));
+        throw new \Exception('app_index'.__FILE__);
     }
 
     protected function getLoginUrl()
