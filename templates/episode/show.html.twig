@@ -109,6 +109,9 @@
           {% endfor %}
         </tbody>
       </table>
+      {% if app.user %}
+        <a href="{{ path('comment_new') }}">Add new comment</a>
+      {% endif %}
     </tbody>
   </table>
 
