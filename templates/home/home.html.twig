@@ -1,5 +1,36 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}
+  Welcome on Lockdown series
+{% endblock %}
+
 {% block body %}
-<h1>Bienvenue !</h1>
+  <div style="background-image: url('/images/background-homepage.jpg')">
+    <h1 class="d-flex justify-content-center col-lg-12">
+      <img src="https://fontmeme.com/permalink/210512/d3844c7146e969b725b529c4412bdb24.png"
+        alt="netflix-font"
+        border="2px" />
+    </h1>
+    <div>
+      <h2>
+        Bienvenue sur votre site préfré
+      </h2>
+      <p class="text-white">
+        Vous allez pouvoir découvrir notre watchlist pour le confinement
+      </p>
+      <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+      <div class="d-flex justify-content-around p-5">
+        <a type="button"
+          class="btn btn-secondary btn-lg justify-content-around"
+          href="{{ path('program_index') }}">
+          SERIES
+        </a>
+        <a type="button"
+          class="btn btn-secondary btn-lg justify-content-around"
+          href="{{ path('category_index') }}">
+          CATEGORIES
+        </a>
+      </div>
+    </div>
+  </div>
 {% endblock %}
