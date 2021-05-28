@@ -2,28 +2,26 @@
 
 namespace App\Form;
 
-use App\Entity\Episode;
+use App\Entity\Comment;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EpisodeType extends AbstractType
+class CommentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title')
-            ->add('number')
-            ->add('synopsis')
-            ->add('season', null, ['choice_label' => 'id'])
-            /* ->add('season', null, ['choice_label' => 'program_id']) */
-        ;
+            ->add('Author', null, ['choice_label' => 'username'])
+            ->add('episode', null, ['choice_label' => 'title'])
+            ->add('rate')
+            ->add('comment');
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Episode::class,
+            'data_class' => Comment::class,
         ]);
     }
 }

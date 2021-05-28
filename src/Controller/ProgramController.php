@@ -2,6 +2,7 @@
 // src/Controller/ProgramController.php
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Season;
 use App\Entity\Episode;
 use App\Entity\Program;
@@ -138,6 +139,7 @@ class ProgramController extends AbstractController
      */
     public function showEpisode(Program $program, Season $season, Episode $episode)
     {
+        $comments = $episode->getComments();
         if (!$episode) {
             throw $this->createNotFoundException(
                 'No episode : ' . $episode . ' found in program\'s table.'
@@ -147,6 +149,7 @@ class ProgramController extends AbstractController
             'program' => $program,
             'season' => $season,
             'episode' => $episode,
+            'comments' => $comments,
 
         ]);
     }

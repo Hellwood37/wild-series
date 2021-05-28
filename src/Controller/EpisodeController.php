@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Season;
 use App\Entity\Episode;
 use App\Entity\Program;
@@ -28,7 +29,7 @@ class EpisodeController extends AbstractController
     {
         return $this->render('episode/index.html.twig', [
             'episodes' => $episodeRepository->findAll(),
-            
+
         ]);
     }
 
@@ -66,6 +67,7 @@ class EpisodeController extends AbstractController
 
         return $this->render('episode/new.html.twig', [
             'episode' => $episode,
+
             'form' => $form->createView(),
         ]);
     }
@@ -76,8 +78,11 @@ class EpisodeController extends AbstractController
      */
     public function show(Episode $episode): Response
     {
+        $comments = $episode->getcomments();
+
         return $this->render('episode/show.html.twig', [
             'episode' => $episode,
+            'comments' => $comments,
         ]);
     }
 
