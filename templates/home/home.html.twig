@@ -18,7 +18,44 @@
       <p class="text-white">
         Vous allez pouvoir découvrir notre watchlist pour le confinement
       </p>
-      <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+      
+        <h1>
+    Les dernières séries ajoutées
+  </h1>
+
+  {% for program in program %}
+    <div>
+      <h2>
+        
+        <a href="{{
+          path(
+            'program_show',
+           {program: program.slug}
+          )
+          }}">
+          {{ program.title }}
+        </a>
+      </h2>
+      <ul>
+        <li>Sommaire : {{ program.summary }}</li>
+        <li>Origine : {{ program.country }}</li>
+        <li>Date de sortie : {{ program.year }}</li>
+      </ul>
+      {# Lien vers la fiche de la série : #}
+      <a href="{{
+        path(
+          'program_show',
+          {program: program.slug}
+        )
+        }}">
+        <button type="button" class="btn btn-primary">Voir la fiche</button>
+      </a>
+      <br />
+    </div>
+  {% else %}
+    Aucune séries trouvée.
+  {% endfor %}
+
       <div class="d-flex justify-content-around p-5">
         <a type="button"
           class="btn btn-secondary btn-lg justify-content-around"
