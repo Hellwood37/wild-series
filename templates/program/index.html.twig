@@ -24,6 +24,9 @@
 			<a href="{{ path("program_show", { program: program.slug }) }}">
 				<button type="button" class="btn btn-primary">Voir la fiche</button>
 			</a>
+			{% if is_granted("ROLE_ADMIN") %}
+    		<a href="{{ path('program_edit', { 'program': program.slug} ) }}"><button type="button" class="btn btn-secondary">Editer</button></a>
+			{% endif %}
 			<br>
 		</div>
 	{% else %}
