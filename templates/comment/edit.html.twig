@@ -9,5 +9,9 @@
 
     <a href="{{ path('comment_index') }}">back to list</a>
 
-    {{ include('comment/_delete_form.html.twig') }}
+  {% if app.user %}
+    {% if is_granted('ROLE_ADMIN') or app.user.email == comment.author.email %}
+      {{ include('comment/_delete_form.html.twig') }}
+    {% endif %}
+  {% endif %}
 {% endblock %}

@@ -2,19 +2,20 @@
 // src/Controller/ProgramController.php
 namespace App\Controller;
 
-use App\Entity\Comment;
 use App\Entity\Season;
+use App\Entity\Comment;
 use App\Entity\Episode;
 use App\Entity\Program;
 use App\Service\Slugify;
 use App\Form\ProgramType;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Mime\Email;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 
 /**
@@ -64,6 +65,8 @@ class ProgramController extends AbstractController
             $program->setSlug($slug);
             // Persist Program Object
             $entityManager->persist($program);
+            // Set the program's owner
+            $program->setOwner($this->getUser());
             // Flush the persisted object
             $entityManager->flush();
             // Send an Email after have had persist object
@@ -160,6 +163,11 @@ class ProgramController extends AbstractController
      */
     public function edit(Request $request, Program $program): Response
     {
+        // Check wether the logged in user is the owner of the program
+        if (!($this->getUser() == $program->getOwner())) {
+            // If not the owner, throws a 403 Access Denied exception
+            throw new AccessDeniedException('Only the owner can edit the program!');
+        }
         $form = $this->createForm(ProgramType::class, $program);
         $form->handleRequest($request);
 
